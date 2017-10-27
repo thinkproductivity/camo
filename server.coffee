@@ -5,6 +5,7 @@ Http        = require 'http'
 Https       = require 'https'
 Crypto      = require 'crypto'
 QueryString = require 'querystring'
+cors        = require 'cors'
 
 port            = parseInt process.env.PORT        || 8081, 10
 version         = require(Path.resolve(__dirname, "package.json")).version
@@ -199,7 +200,15 @@ hexdec = (str) ->
       buf[i/2] = parseInt(str[i..i+1], 16)
     buf.toString()
 
-server = Http.createServer (req, resp) ->
+useCorsMiddleware = (next) ->
+  (req, resp) ->
+    cors({origin: '*'}) req, resp, (err) ->
+      if err
+        throw err
+
+      next(req, resp)
+
+server = Http.createServer useCorsMiddleware (req, resp) ->
   if req.method != 'GET' || req.url == '/'
     resp.writeHead 200, default_security_headers
     resp.end 'hwhat'
