@@ -1,9 +1,6 @@
 {
   "name": "camo",
   "version": "2.3.0",
-  "dependencies": {
-    "cors": "^2.8.4"
-  },
   "engines": {
     "node": "^6.11.1"
   },

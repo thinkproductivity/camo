@@ -5,7 +5,6 @@ Http        = require 'http'
 Https       = require 'https'
 Crypto      = require 'crypto'
 QueryString = require 'querystring'
-cors        = require 'cors'
 
 port            = parseInt process.env.PORT        || 8081, 10
 version         = require(Path.resolve(__dirname, "package.json")).version
@@ -43,6 +42,7 @@ default_security_headers =
   "X-Content-Type-Options": "nosniff"
   "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
   "Strict-Transport-Security" : "max-age=31536000; includeSubDomains"
+  "Access-Control-Allow-Origin" : "*"
 
 four_oh_four = (resp, msg, url) ->
   error_log "#{msg}: #{url?.format() or 'unknown'}"
@@ -54,6 +54,7 @@ four_oh_four = (resp, msg, url) ->
     "X-Content-Type-Options"    : default_security_headers["X-Content-Type-Options"]
     "Content-Security-Policy"   : default_security_headers["Content-Security-Policy"]
     "Strict-Transport-Security" : default_security_headers["Strict-Transport-Security"]
+    "Access-Control-Allow-Origin" : default_security_headers["Access-Control-Allow-Origin"]
 
   finish resp, "Not Found"
 
@@ -108,6 +109,7 @@ process_url = (url, transferredHeaders, resp, remaining_redirects) ->
           'X-Content-Type-Options'    : default_security_headers['X-Content-Type-Options']
           'Content-Security-Policy'   : default_security_headers['Content-Security-Policy']
           'Strict-Transport-Security' : default_security_headers['Strict-Transport-Security']
+          "Access-Control-Allow-Origin" : default_security_headers["Access-Control-Allow-Origin"]
 
         if eTag = srcResp.headers['etag']
           newHeaders['etag'] = eTag
@@ -200,15 +202,7 @@ hexdec = (str) ->
       buf[i/2] = parseInt(str[i..i+1], 16)
     buf.toString()
 
-useCorsMiddleware = (next) ->
-  (req, resp) ->
-    cors({origin: '*'}) req, resp, (err) ->
-      if err
-        throw err
-
-      next(req, resp)
-
-server = Http.createServer useCorsMiddleware (req, resp) ->
+server = Http.createServer (req, resp) ->
   if req.method != 'GET' || req.url == '/'
     resp.writeHead 200, default_security_headers
     resp.end 'hwhat'
