@@ -41,7 +41,7 @@ default_security_headers =
   "X-XSS-Protection": "1; mode=block"
   "X-Content-Type-Options": "nosniff"
   "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
-  "Strict-Transport-Security" : "max-age=31536000; includeSubDomains"
+  # "Strict-Transport-Security" : "max-age=31536000; includeSubDomains"
   "Access-Control-Allow-Origin" : "*"
 
 four_oh_four = (resp, msg, url) ->
@@ -53,7 +53,7 @@ four_oh_four = (resp, msg, url) ->
     "X-XSS-Protection"          : default_security_headers["X-XSS-Protection"]
     "X-Content-Type-Options"    : default_security_headers["X-Content-Type-Options"]
     "Content-Security-Policy"   : default_security_headers["Content-Security-Policy"]
-    "Strict-Transport-Security" : default_security_headers["Strict-Transport-Security"]
+    # "Strict-Transport-Security" : default_security_headers["Strict-Transport-Security"]
     "Access-Control-Allow-Origin" : default_security_headers["Access-Control-Allow-Origin"]
 
   finish resp, "Not Found"
@@ -108,7 +108,7 @@ process_url = (url, transferredHeaders, resp, remaining_redirects) ->
           'X-XSS-Protection'          : default_security_headers['X-XSS-Protection']
           'X-Content-Type-Options'    : default_security_headers['X-Content-Type-Options']
           'Content-Security-Policy'   : default_security_headers['Content-Security-Policy']
-          'Strict-Transport-Security' : default_security_headers['Strict-Transport-Security']
+        #   'Strict-Transport-Security' : default_security_headers['Strict-Transport-Security']
           "Access-Control-Allow-Origin" : default_security_headers["Access-Control-Allow-Origin"]
 
         if eTag = srcResp.headers['etag']
